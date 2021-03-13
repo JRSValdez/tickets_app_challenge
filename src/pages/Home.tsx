@@ -1,26 +1,31 @@
-import React, {useEffect} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {fetchTickets} from '../redux/actions/actions'
+import React, { useEffect, useContext } from "react";
+import { ThemeContext } from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchTickets } from "../redux/actions/actions";
+import { RoundedButton, MainContainer, MainNavbar } from "../components/common";
+import { ITheme, IState } from "../utils/interfaces";
 
-interface IState {
-    tickets:object
+interface IHomeProps {
+  children?: ITheme;
 }
 
-const Home = () => {
+const Home = (props: IHomeProps) => {
+  const ticketsState = useSelector((state: IState) => state.tickets);
+  const dispatch = useDispatch();
 
-    const ticketsState = useSelector( (state:IState) => state.tickets);
-    const dispatch = useDispatch();
+  const theme = useContext(ThemeContext);
 
-    useEffect(()=>{
-        dispatch(fetchTickets());
-    },[]);
+  useEffect(() => {
+    dispatch(fetchTickets());
+  }, []);
 
+  return (
+    <React.Fragment>
+      <MainNavbar />
+      <MainContainer>
+      </MainContainer>
+    </React.Fragment>
+  );
+};
 
-    return (
-        <div>
-            Hello
-        </div>
-    )
-}
-
-export default Home
+export default Home;

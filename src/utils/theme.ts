@@ -1,21 +1,9 @@
-import { Interface } from "readline";
+import { ITheme } from "./interfaces";
 
-interface IThemeDetail {
-    primary:string,
-    secondary:string,
-    accent:string,
-}
-
-interface ITheme {
-    colors:IThemeDetail
+const theme: ITheme = {
+  primary: "#020659",
+  secondary: "#506CBF",
+  accent: "#ffffff",
 };
-
-const theme:ITheme ={
-    colors:{
-        primary:"#0468BF",
-        secondary:"#049DBF",
-        accent:"#ffffff"
-    }
-}
 
 export default theme;
