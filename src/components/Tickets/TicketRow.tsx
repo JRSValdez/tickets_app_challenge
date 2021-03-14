@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 import {ITicket} from '../../utils/interfaces';
 
 import {TicketActions} from '.';
 
 const TicketRow = (props:ITicket) => {
-    const {name, description,user,priority,status} = props;
+    const {id,name, description,user,priority,status} = props;
     return (
         <tr>
           <td>{name}</td>
@@ -12,7 +12,7 @@ const TicketRow = (props:ITicket) => {
           <td>{user}</td>
           <td>{priority}</td>
           <td>{status}</td>
-          <td> <TicketActions /> </td>
+          <td> <TicketActions ticketId={id} /> </td>
         </tr>
     )
 }

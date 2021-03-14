@@ -4,7 +4,7 @@ import theme from "./utils/theme";
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 import { MainNavbar } from "./components/common";
-import { Home, TicketsAdd, NotFound } from "./pages";
+import { Home, TicketsAdd, NotFound, Ticket } from "./pages";
 
 function App() {
   return (
@@ -12,8 +12,11 @@ function App() {
       <Router>
         <MainNavbar />
         <Switch>
-          <Route exact path="/tickets/add">
+          <Route exact path="/ticket/add">
             <TicketsAdd />
+          </Route>
+          <Route exact path="/ticket/:id">
+            <Ticket />
           </Route>
           <Route exact path="/">
             <Home />
