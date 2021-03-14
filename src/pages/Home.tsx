@@ -1,30 +1,33 @@
-import React, { useEffect, useContext } from "react";
-import { ThemeContext } from "styled-components";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchTickets } from "../redux/actions/actions";
-import { RoundedButton, MainContainer, MainNavbar } from "../components/common";
-import { ITheme, IState } from "../utils/interfaces";
+import { IState } from "../utils/interfaces";
+import { RootState } from "../redux/reducers/index";
 
-interface IHomeProps {
-  children?: ITheme;
-}
+import ReactLoading from "react-loading";
+import { MainContainer, TitleText } from "../components/common";
+import { TicketTable } from "../components/Tickets";
 
-const Home = (props: IHomeProps) => {
-  const ticketsState = useSelector((state: IState) => state.tickets);
+const Home = () => {
+  const ticketsState = useSelector((state: RootState): IState => state.tickets);
   const dispatch = useDispatch();
-
-  const theme = useContext(ThemeContext);
 
   useEffect(() => {
     dispatch(fetchTickets());
   }, []);
 
   return (
-    <React.Fragment>
-      <MainNavbar />
-      <MainContainer>
-      </MainContainer>
-    </React.Fragment>
+    <MainContainer>
+      <TitleText title="Listado de Tickets" />
+      {ticketsState.isLoading ? (
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          Cargando tickets
+          <ReactLoading type="cubes" color="#000" />
+        </div>
+      ) : (
+        <TicketTable tickets={ticketsState.tickets} />
+      )}
+    </MainContainer>
   );
 };
 

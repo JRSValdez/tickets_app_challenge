@@ -10,14 +10,24 @@ interface IAttachment {
   download: string
 }
 
-interface ITicket {
-  id: number;
-  name: string;
-  descripcion: string;
-  priority: string;
-  attachments: IAttachment[];
+export interface ITicket {
+  id: number
+  name: string
+  user:string
+  description: string
+  priority: string
+  status:string
+  attachments: IAttachment[]
+}
+
+interface IInfo {
+  page:number
+  totalPages:number
+  totalRegisters:number
 }
 
 export interface IState {
-  tickets: ITicket[];
+  tickets: ITicket[]
+  info:IInfo,
+  isLoading?:Boolean
 }
