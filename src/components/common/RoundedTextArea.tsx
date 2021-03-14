@@ -4,10 +4,12 @@ import { BaseCSSField } from "../../utils/styles";
 import {FieldContainer} from ".";
 
 interface IRoundedTextArea {
-  title: string;
-  name: string;
-  value: string;
-  placeholder: string;
+  title: string
+  name: string
+  value: string
+  placeholder: string
+  onChange:any
+  disabled?:boolean
 }
 
 const MyTextArea = styled.textarea`
@@ -17,13 +19,15 @@ const MyTextArea = styled.textarea`
 `;
 
 const RoundedTextArea = (props: IRoundedTextArea) => {
-  const { title, name, value, placeholder } = props;
+  const { title, name, value, placeholder, onChange, disabled=false } = props;
   return (
     <FieldContainer title={title} >
       <MyTextArea
         value={value}
         name={name}
         placeholder={placeholder}
+        onChange={onChange}
+        disabled={disabled}
       />
     </FieldContainer>
   );

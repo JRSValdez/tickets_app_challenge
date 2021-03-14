@@ -1,7 +1,8 @@
 import React from "react";
+import {ITicket} from '../../utils/interfaces';
+
 import {Table} from "react-bootstrap";
 import {TicketHeader, TicketRow} from '.';
-import {ITicket} from '../../utils/interfaces';
 
 interface ITicketTableProps {
   tickets:ITicket[]
@@ -9,6 +10,7 @@ interface ITicketTableProps {
 
 const TicketTable = (props:ITicketTableProps) => {
   const {tickets} = props;
+
   return (
     <Table striped bordered hover responsive size="sm" >
       <thead>
@@ -16,7 +18,7 @@ const TicketTable = (props:ITicketTableProps) => {
       </thead>
       <tbody>
         {
-          tickets.map((ticket:ITicket) => <TicketRow {...ticket} />)
+          tickets.map((ticket:ITicket) => <TicketRow ticket={ticket} />)
         }
       </tbody>
     </Table>

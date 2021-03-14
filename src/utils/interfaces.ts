@@ -15,8 +15,8 @@ export interface ITicket {
   name: string
   user:string
   description: string
-  priority: string
-  status:string
+  priority: number
+  status:number
   attachments: IAttachment[]
 }
 
@@ -26,8 +26,21 @@ interface IInfo {
   totalRegisters:number
 }
 
+export interface ITicketStates{
+  id:number
+  name:string
+}
+
+export interface ITicketPriorities{
+  id:number
+  name:string
+}
+
 export interface IState {
   tickets: ITicket[]
-  info:IInfo,
-  isLoading?:Boolean
+  selectedTicket: ITicket
+  info:IInfo
+  isLoading?:Boolean,
+  states:ITicketStates[]
+  priorities:ITicketPriorities[]
 }

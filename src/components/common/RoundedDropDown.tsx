@@ -13,6 +13,8 @@ interface IRoundedDropDown {
     name:string
     value:number
     options:IOptions[]
+    onChange:any
+    disabled?:boolean
 }
 
 const MyDropDown = styled.select`
@@ -26,10 +28,10 @@ const MyDropDown = styled.select`
 `;
 
 const RoundedDropDown = (props:IRoundedDropDown) => {
-    const {title,name, value, options} = props;
+    const {title,name, value, options, onChange,disabled=false} = props;
     return (
         <FieldContainer title={title}>
-            <MyDropDown value={value} name={name}>
+            <MyDropDown disabled={disabled} value={value} name={name} onChange={onChange}>
                 {
                     options.map(({name,id})=> <option value={id}>{name}</option>)
                 }

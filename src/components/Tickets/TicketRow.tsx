@@ -3,8 +3,12 @@ import {ITicket} from '../../utils/interfaces';
 
 import {TicketActions} from '.';
 
-const TicketRow = (props:ITicket) => {
-    const {id,name, description,user,priority,status} = props;
+interface ITicketRowProps {
+  ticket:ITicket
+}
+
+const TicketRow = ({ticket}:ITicketRowProps) => {
+    const {id,name, description,user,priority,status} = ticket;
     return (
         <tr>
           <td>{name}</td>
@@ -12,7 +16,7 @@ const TicketRow = (props:ITicket) => {
           <td>{user}</td>
           <td>{priority}</td>
           <td>{status}</td>
-          <td> <TicketActions ticketId={id} /> </td>
+          <td> <TicketActions ticket={ticket} /> </td>
         </tr>
     )
 }

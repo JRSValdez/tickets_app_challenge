@@ -12,7 +12,6 @@ const TicketAttachments = () => {
   const [attachmentsCount, setAttachmentCount] = useState(1);
 
   const addAttachmentHandle = () => {
-    console.log(attachmentsCount);
     setAttachmentCount(attachmentsCount + 1);
   };
 
@@ -27,7 +26,7 @@ const TicketAttachments = () => {
       </Row>
       {[...Array(attachmentsCount)].map((_, index) => (
         <Row key={index} className='mb-2'>
-          <Col md={4}>{`File #${index}`}</Col>
+          <Col md={4}>{`File #${index+1}`}</Col>
           <Col md={8}>
             <RoundedInputFile name={`file_${index}`} value={""} />
           </Col>
