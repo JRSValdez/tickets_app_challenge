@@ -1,8 +1,10 @@
 import {combineReducers} from 'redux';
-import ticketsReducer from './reducer'
+import ticketsReducer from './reducer';
+import authReducer from './auth';
 
 const rootReducer = combineReducers({
-    tickets: ticketsReducer
+    tickets: ticketsReducer,
+    auth:authReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchPriorities,
   fetchStates,
-  setSelectedTicket,
 } from "../redux/actions/actions";
 import { IState, ITicket } from "../utils/interfaces";
 import { RootState } from "../redux/reducers/index";
@@ -39,6 +38,7 @@ const initialState: ITicket = {
     {
       id: 0,
       type: "",
+      name: "",
       download: "",
     },
   ],
@@ -51,6 +51,7 @@ const Ticket = () => {
 
   let editable: boolean = action === "edit";
   let view: boolean = action === "view";
+  let add: boolean = action === "add";
 
   const [ticket, setTicket] = useState(initialState);
 
@@ -138,7 +139,9 @@ const Ticket = () => {
               </Form.Group>
             </Col>
           </Row>
-          {!editable ? <TicketAttachments /> : null}
+          {!editable ? (
+            <TicketAttachments files={ticketState.selectedTicket.attachments} />
+          ) : null}
         </Form>
       ) : (
         <div className="d-flex flex-column justify-content-center align-items-center">

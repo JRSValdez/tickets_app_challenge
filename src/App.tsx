@@ -4,7 +4,7 @@ import theme from "./utils/theme";
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 import { MainNavbar } from "./components/common";
-import { Home, TicketsAdd, NotFound, Ticket, Login } from "./pages";
+import { Home, NotFound, Ticket, Login } from "./pages";
 
 function App() {
   return (
