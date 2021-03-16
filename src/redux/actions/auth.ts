@@ -1,20 +1,27 @@
-import API from "../../API";
-import { ThunkDispatch } from "redux-thunk";
-import { AnyAction } from "redux";
-import { AUTH_USER, API_START, API_END } from "./types";
+import API, { setClientToken } from "../../API";
+import { AUTH_USER, AuthDispatch, API_ERROR } from "./types";
 import { IAuth, IUserCredentials } from "../../utils/interfaces";
 
-export type AppDispatch = ThunkDispatch<IAuth, any, AnyAction>;
 
 export const authUser = (credentials: IUserCredentials) => {
-  return async (dispatch: AppDispatch) => {
-    dispatch({ type: API_START });
+  return async (dispatch: AuthDispatch) => {
     const response = await API.post("/login", credentials).then(
       (res) => res.data
     );
+
+    if(response.success){
+      setClientToken(response.accessToken);
+      localStorage.setItem('accessToken', response.accessToken);
+      return dispatch({
+        type: AUTH_USER,
+        payload: response,
+      });
+    }
+
     return dispatch({
-      type: AUTH_USER,
-      payload: response,
+      type: API_ERROR,
+      payload: response.message,
     });
+    
   };
 };

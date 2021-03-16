@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchPriorities,
-  fetchStates,
-} from "../redux/actions/actions";
+import { fetchPriorities, fetchStates } from "../redux/actions/actions";
+import { TicketsDispatch } from "../redux/actions/types";
 import { IState, ITicket } from "../utils/interfaces";
 import { RootState } from "../redux/reducers/index";
 
+import ReactLoading from "react-loading";
 import { Form, Row, Col } from "react-bootstrap";
 import {
   MainContainer,
@@ -18,7 +17,6 @@ import {
   RoundedButton,
 } from "../components/common";
 import { TicketAttachments } from "../components/Tickets";
-import ReactLoading from "react-loading";
 
 type acntionType = "add" | "edit" | "view";
 
@@ -31,38 +29,51 @@ const initialState: ITicket = {
   id: 0,
   name: "",
   description: "",
-  priority: 0,
-  user: "",
-  status: 0,
+  user: {
+    id:0,
+    name:'',
+    email:''
+  },
+  priority: {
+    id:0,
+    name:''
+  },
+  state: {
+    id:0,
+    name:''
+  },
   attachments: [
-    {
-      id: 0,
-      type: "",
-      name: "",
-      download: "",
-    },
   ],
+  comments:[]
 };
 
 const Ticket = () => {
   const ticketState = useSelector((state: RootState): IState => state.tickets);
   const { id, action }: IParams = useParams();
-  const dispatch = useDispatch();
+  const dispatch: TicketsDispatch = useDispatch();
 
   let editable: boolean = action === "edit";
   let view: boolean = action === "view";
   let add: boolean = action === "add";
 
+  const getSelects = useCallback(() => {
+    setIsLoading(true);
+    dispatch(fetchPriorities()).then(() =>
+      dispatch(fetchStates()).then(() => {
+        if (editable || view) {
+          setTicket(ticketState.selectedTicket);
+        }
+        setIsLoading(false);
+      })
+    );
+  }, [dispatch, editable, view]);
+
   const [ticket, setTicket] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchPriorities());
-    dispatch(fetchStates());
-
-    if (editable || view) {
-      setTicket(ticketState.selectedTicket);
-    }
-  }, []);
+    getSelects();
+  }, [getSelects]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let target = e.target;
@@ -75,7 +86,7 @@ const Ticket = () => {
   return (
     <MainContainer>
       <TitleText title={`Ticket #${id}`} />
-      {ticketState.selectedTicket.id > 0 ? (
+      {!isLoading ? (
         <Form>
           <Row>
             <Col sm={12} md={8}>
@@ -95,7 +106,7 @@ const Ticket = () => {
                 <RoundedDropDown
                   title="Estado"
                   name="status"
-                  value={ticket.status}
+                  value={ticket.state.id}
                   options={ticketState.states}
                   onChange={handleChange}
                   disabled={view}
@@ -121,7 +132,7 @@ const Ticket = () => {
                 <RoundedDropDown
                   title="Prioridad"
                   name="priority"
-                  value={ticket.priority}
+                  value={ticket.priority.id}
                   options={ticketState.priorities}
                   onChange={handleChange}
                   disabled={view}

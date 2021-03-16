@@ -8,11 +8,11 @@ let API = axios.create({
 });
 
 // Set JSON Web Token in Client to be included in all calls
-// export const setClientToken = token:string => {
-//   API.interceptors.request.use(function(config) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//     return config;
-//   });
-// };
+export const setClientToken = (token:string) => {
+  API.interceptors.request.use(function(config) {
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  });
+};
 
 export default API;

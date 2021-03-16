@@ -33,7 +33,7 @@ const RoundedDropDown = (props:IRoundedDropDown) => {
         <FieldContainer title={title}>
             <MyDropDown disabled={disabled} value={value} name={name} onChange={onChange}>
                 {
-                    options.map(({name,id})=> <option value={id}>{name}</option>)
+                    options.map(({name,id})=> <option key={id} value={id}>{name}</option>)
                 }
             </MyDropDown>
         </FieldContainer>

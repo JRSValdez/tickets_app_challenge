@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchTickets } from "../redux/actions/actions";
 import { IState } from "../utils/interfaces";
@@ -12,9 +12,13 @@ const Home = () => {
   const ticketsState = useSelector((state: RootState): IState => state.tickets);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const getTickets = useCallback(() => {
     dispatch(fetchTickets());
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    getTickets();
+  }, [getTickets]);
 
   return (
     <MainContainer>

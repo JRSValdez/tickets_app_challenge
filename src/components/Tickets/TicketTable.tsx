@@ -18,7 +18,7 @@ const TicketTable = (props:ITicketTableProps) => {
       </thead>
       <tbody>
         {
-          tickets.map((ticket:ITicket) => <TicketRow ticket={ticket} />)
+          tickets.map((ticket:ITicket) => <TicketRow key={ticket.id} ticket={ticket} />)
         }
       </tbody>
     </Table>

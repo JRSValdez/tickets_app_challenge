@@ -22,7 +22,7 @@ const Attachment = ({ id, index, name, download }: IAttachmentProps) => {
         { !name ? (
           <RoundedInputFile name={`file_${index}`} value={""} />
         ) : (
-          <a target='_blank' href={download}>{download}</a>
+          <a target='_blank' rel="noreferrer" href={download}>{download}</a>
         )}
       </Col>
     </Row>

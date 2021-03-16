@@ -1,12 +1,12 @@
 import React from "react";
 
-interface FieldContainer {
+interface IFieldContainerProps {
   children:JSX.Element
   title:string
 }
 
 
-const FieldContainer = ({children,title}: FieldContainer) => {
+const FieldContainer = ({children,title}: IFieldContainerProps) => {
   return (
     <div className="d-flex flex-column">
       <label>{title}</label>

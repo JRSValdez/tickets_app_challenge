@@ -6,6 +6,12 @@ export interface ITheme {
 }
 
 //TICKETS
+export interface IUser {
+  id: number;
+  name: string;
+  email: string;
+}
+
 export interface IAttachment {
   id: number;
   name: string;
@@ -13,13 +19,20 @@ export interface IAttachment {
   download: string;
 }
 
+export interface IComments {
+  id: number;
+  description: string;
+  author: string;
+}
+
 export interface ITicket {
   id: number;
   name: string;
-  user: string;
+  user: IUser;
   description: string;
-  priority: number;
-  status: number;
+  priority: ITicketPriorities;
+  state: ITicketStates;
+  comments: IComments[];
   attachments: IAttachment[];
 }
 
@@ -50,6 +63,9 @@ export interface IState {
 
 //AUTH
 export interface IAuth {
+  success: boolean;
+  error: boolean;
+  message: string;
   user: string;
   email: string;
   accessToken: string;
@@ -59,5 +75,5 @@ export interface IAuth {
 
 export interface IUserCredentials {
   email: string;
-  password:string
+  password: string;
 }

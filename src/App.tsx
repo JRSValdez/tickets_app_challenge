@@ -1,9 +1,9 @@
 import React from "react";
 import { ThemeProvider } from "styled-components";
 import theme from "./utils/theme";
-import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import { MainNavbar } from "./components/common";
+import { MainNavbar, ProtectedPage } from "./components/common";
 import { Home, NotFound, Ticket, Login } from "./pages";
 
 function App() {
@@ -15,12 +15,12 @@ function App() {
           <Route exact path="/login">
             <Login />
           </Route>
-          <Route exact path="/ticket/:action/:id">
+          <ProtectedPage exact path="/ticket/:action/:id">
             <Ticket />
-          </Route>
-          <Route exact path="/">
+          </ProtectedPage>
+          <ProtectedPage exact path="/">
             <Home />
-          </Route>
+          </ProtectedPage>
           <Route path="*">
             <NotFound />
           </Route>

@@ -5,10 +5,10 @@ import {
   FETCH_STATES,
   API_END,
   API_START,
+  API_ERROR,
 } from "../actions/types";
 import {
   IState,
-  ITicket,
   ITicketPriorities,
   ITicketStates,
 } from "../../utils/interfaces";
@@ -19,11 +19,22 @@ const initialState: IState = {
   selectedTicket: {
     id: 0,
     name: "",
-    user: "",
+    user: {
+      id:0,
+      name:'',
+      email:''
+    },
     description: "",
-    priority: 0,
-    status: 0,
+    priority: {
+      id:0,
+      name:''
+    },
+    state: {
+      id:0,
+      name:''
+    },
     attachments: [],
+    comments: [],
   },
   info: {
     page: 0,
@@ -38,29 +49,27 @@ const initialState: IState = {
 const reducer = (state = initialState, action: TicketsActionsType): IState => {
   switch (action.type) {
     case FETCH_TICKETS:
-      const res: IState = action.payload;
       return {
         ...state,
-        tickets: res.tickets,
-        info: res.info,
+        tickets: action.payload,
       };
     case SET_SELECTED_TICKET:
-        const ticket = action.payload;
-        return {
-          ...state,
-          selectedTicket:ticket,
-        };
+      const ticket = action.payload;
+      return {
+        ...state,
+        selectedTicket: ticket,
+      };
     case FETCH_PRIORITIES:
       const priorities: ITicketPriorities[] = action.payload.priorities;
       return {
         ...state,
-        priorities:priorities
+        priorities: priorities,
       };
     case FETCH_STATES:
       const states: ITicketStates[] = action.payload.states;
       return {
         ...state,
-        states
+        states,
       };
     case API_START:
       return {
@@ -71,6 +80,10 @@ const reducer = (state = initialState, action: TicketsActionsType): IState => {
       return {
         ...state,
         isLoading: false,
+      };
+    case API_ERROR:
+      return {
+        ...state,
       };
     default:
       return state;

@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { setClientToken } from "../API";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { RootState } from "../redux/reducers/index";
 import { authUser } from "../redux/actions/auth";
-import { IUserCredentials } from "../utils/interfaces";
-import type { AppDispatch } from "../redux/actions/auth";
+import { IUserCredentials, IAuth } from "../utils/interfaces";
+import type { AuthDispatch } from "../redux/actions/types";
 
+import ReactLoading from "react-loading";
 import { Card, Form } from "react-bootstrap";
 import {
   MainContainer,
   RoundedButton,
   RoundedInputText,
+  ErrorAlert,
+  CenterContainer,
 } from "../components/common";
-import ReactLoading from "react-loading";
 
 const initialState: IUserCredentials = {
   email: "",
@@ -20,7 +25,9 @@ const initialState: IUserCredentials = {
 const Login = () => {
   const [userCredentials, setUserCredentials] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch: AuthDispatch = useDispatch();
+  const authState = useSelector((state: RootState): IAuth => state.auth);
+  let history = useHistory();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let target = e.target;
@@ -33,13 +40,14 @@ const Login = () => {
   const handleAuthUser = () => {
     setIsLoading(true);
     dispatch(authUser(userCredentials)).then(() => {
+      history.push("/");
       setIsLoading(false);
     });
   };
 
   return (
     <MainContainer>
-      <div className="d-flex justify-content-center align-items-center">
+      <CenterContainer>
         <Card style={{ maxWidth: "600px", width: "100%" }}>
           <Card.Header>
             <Card.Title>Login</Card.Title>
@@ -47,7 +55,9 @@ const Login = () => {
           <Card.Body>
             <Card.Text>Tickets App Login</Card.Text>
             {isLoading ? (
-              <ReactLoading type="cubes" color="#000" />
+              <CenterContainer>
+                <ReactLoading type="cubes" color="#000" />
+              </CenterContainer>
             ) : (
               <React.Fragment>
                 <Form>
@@ -74,11 +84,14 @@ const Login = () => {
                 <RoundedButton onClick={handleAuthUser} color="primary">
                   Iniciar sesión
                 </RoundedButton>
+                {authState.error ? (
+                  <ErrorAlert message={authState.message} />
+                ) : null}
               </React.Fragment>
             )}
           </Card.Body>
         </Card>
-      </div>
+      </CenterContainer>
     </MainContainer>
   );
 };

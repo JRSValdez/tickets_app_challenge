@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
 import { BaseCSSField } from "../../utils/styles";
-import {FieldContainer} from ".";
 
 interface IRoundedInputFileProps{
     name:string
