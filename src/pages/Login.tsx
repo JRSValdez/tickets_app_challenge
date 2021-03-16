@@ -37,11 +37,12 @@ const Login = () => {
     });
   };
 
-  const handleAuthUser = () => {
+  const handleAuthUser = (e: React.FormEvent) => {
+    e.preventDefault();
     setIsLoading(true);
     dispatch(authUser(userCredentials)).then(() => {
-      history.push("/");
       setIsLoading(false);
+      history.push("/");
     });
   };
 
@@ -60,7 +61,7 @@ const Login = () => {
               </CenterContainer>
             ) : (
               <React.Fragment>
-                <Form>
+                <Form onSubmit={handleAuthUser}>
                   <Form.Group>
                     <RoundedInputText
                       name="email"
@@ -80,10 +81,10 @@ const Login = () => {
                       type="password"
                     />
                   </Form.Group>
+                  <RoundedButton type="submit" color="primary">
+                    Iniciar sesión
+                  </RoundedButton>
                 </Form>
-                <RoundedButton onClick={handleAuthUser} color="primary">
-                  Iniciar sesión
-                </RoundedButton>
                 {authState.error ? (
                   <ErrorAlert message={authState.message} />
                 ) : null}

@@ -5,7 +5,11 @@ import { IState } from "../utils/interfaces";
 import { RootState } from "../redux/reducers/index";
 
 import ReactLoading from "react-loading";
-import { MainContainer, TitleText } from "../components/common";
+import {
+  CenterContainer,
+  MainContainer,
+  TitleText,
+} from "../components/common";
 import { TicketTable } from "../components/Tickets";
 
 const Home = () => {
@@ -24,10 +28,12 @@ const Home = () => {
     <MainContainer>
       <TitleText title="Listado de Tickets" />
       {ticketsState.isLoading ? (
-        <div className="d-flex flex-column justify-content-center align-items-center">
-          Cargando tickets
-          <ReactLoading type="cubes" color="#000" />
-        </div>
+        <CenterContainer column>
+          <React.Fragment>
+            Cargando tickets
+            <ReactLoading type="cubes" color="#000" />
+          </React.Fragment>
+        </CenterContainer>
       ) : (
         <TicketTable tickets={ticketsState.tickets} />
       )}

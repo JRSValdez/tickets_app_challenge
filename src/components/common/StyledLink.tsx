@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 const StyledLink = styled(Link)`
     text-decoration:none !important;
-    color: ${({color}) => color === 'primary' ? '#fff' : '#000'}
+    color: ${({color}) => color === 'primary' ? '#fff' : '#000'} !important;
 `;
 
 export default StyledLink;

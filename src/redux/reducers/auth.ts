@@ -3,7 +3,7 @@ import {
   LOG_OUT_USER,
   API_END,
   API_START,
-  API_ERROR,
+  AUTH_ERROR,
 } from "../actions/types";
 import { IAuth } from "../../utils/interfaces";
 import type { AuthActionsTypes } from "../actions/types";
@@ -12,8 +12,12 @@ const initialState: IAuth = {
   success: false,
   error: false,
   message: '',
-  user: "",
-  email: "",
+  user: {
+    id:0,
+    name:'',
+    email:'',
+    is_admin:false
+  },
   accessToken: "",
   isLoggedIn: false,
   isLoading: false,
@@ -30,6 +34,7 @@ const authReducer = (state = initialState, action: AuthActionsTypes): IAuth => {
     case LOG_OUT_USER:
       return {
         ...state,
+        isLoggedIn:false
       };
     case API_START:
       return {
@@ -41,7 +46,7 @@ const authReducer = (state = initialState, action: AuthActionsTypes): IAuth => {
         ...state,
         isLoading: false,
       };
-    case API_ERROR:
+    case AUTH_ERROR:
       return {
         ...initialState,
         error: true,

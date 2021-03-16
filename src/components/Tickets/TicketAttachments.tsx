@@ -19,10 +19,12 @@ const Attachment = ({ id, index, name, download }: IAttachmentProps) => {
     <Row key={id} className="mb-2">
       <Col md={4}>{`File #${index}`}</Col>
       <Col md={8}>
-        { !name ? (
+        {!name ? (
           <RoundedInputFile name={`file_${index}`} value={""} />
         ) : (
-          <a target='_blank' rel="noreferrer" href={download}>{download}</a>
+          <a target="_blank" rel="noreferrer" href={download}>
+            {download}
+          </a>
         )}
       </Col>
     </Row>
@@ -39,7 +41,11 @@ const TicketAttachments = ({ files }: ITicketAttachmentsProps) => {
   return (
     <div>
       <Row className="mb-4">
-        <SectionText title="Archivos adjuntos" />
+        {(files && files.length > 0) || !files ? (
+          <SectionText title="Archivos adjuntos" />
+        ) : (
+          null
+        )}
         {!files ? (
           <RoundedButton color="primary" onClick={addAttachmentHandle}>
             +

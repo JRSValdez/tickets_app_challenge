@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { IAuth } from "../../utils/interfaces";
+import { RootState } from "../../redux/reducers/index";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setSelectedTicket } from "../../redux/actions/actions";
 
 import { FaEdit, FaRegEye } from "react-icons/fa";
 import { ITicket } from "../../utils/interfaces";
@@ -16,13 +17,14 @@ const IconsContainer = styled.div`
 `;
 
 interface ITicketActionsProps {
-    ticket:ITicket
+  ticket: ITicket;
 }
 
-const TicketActions = ({ticket}:ITicketActionsProps ) => {
-  const dispacth = useDispatch();
-
+const TicketActions = ({ ticket }: ITicketActionsProps) => {
+  const authState = useSelector((state: RootState): IAuth => state.auth);
   const { id } = ticket;
+
+  const isAdmin = authState.user.is_admin;
 
   const editPath = `/ticket/edit/${id}`;
   const viewPath = `/ticket/view/${id}`;
@@ -30,18 +32,18 @@ const TicketActions = ({ticket}:ITicketActionsProps ) => {
   let history = useHistory();
 
   const editClick = () => {
-    dispacth(setSelectedTicket(ticket));
     history.push(editPath);
   };
 
   const viewClick = () => {
-    dispacth(setSelectedTicket(ticket));
     history.push(viewPath);
   };
 
   return (
     <IconsContainer className="d-flex flex-row justify-content-around">
-      <FaEdit size={ICON_SIZE} title="Editar Ticket" onClick={editClick} />
+      {isAdmin ? (
+        <FaEdit size={ICON_SIZE} title="Editar Ticket" onClick={editClick} />
+      ) : null}
       <FaRegEye size={ICON_SIZE} title="Ver Ticket" onClick={viewClick} />
     </IconsContainer>
   );

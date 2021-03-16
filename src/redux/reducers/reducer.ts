@@ -1,5 +1,6 @@
 import {
   FETCH_TICKETS,
+  UPDATE_TICKET,
   SET_SELECTED_TICKET,
   FETCH_PRIORITIES,
   FETCH_STATES,
@@ -12,61 +13,40 @@ import {
   ITicketPriorities,
   ITicketStates,
 } from "../../utils/interfaces";
+import {TicketsInitialState} from '../../utils/initialStates';
 import type { TicketsActionsType } from "../actions/types";
 
-const initialState: IState = {
-  tickets: [],
-  selectedTicket: {
-    id: 0,
-    name: "",
-    user: {
-      id:0,
-      name:'',
-      email:''
-    },
-    description: "",
-    priority: {
-      id:0,
-      name:''
-    },
-    state: {
-      id:0,
-      name:''
-    },
-    attachments: [],
-    comments: [],
-  },
-  info: {
-    page: 0,
-    totalPages: 0,
-    totalRegisters: 0,
-  },
-  isLoading: false,
-  states: [],
-  priorities: [],
-};
-
-const reducer = (state = initialState, action: TicketsActionsType): IState => {
+const reducer = (state = TicketsInitialState, action: TicketsActionsType): IState => {
   switch (action.type) {
     case FETCH_TICKETS:
       return {
         ...state,
+        error:false,
         tickets: action.payload,
+      };
+    case UPDATE_TICKET:
+      return {
+        ...state,
+        error:false,
+        selectedTicket:{
+          ...action.payload
+        }
       };
     case SET_SELECTED_TICKET:
       const ticket = action.payload;
       return {
         ...state,
+        error:false,
         selectedTicket: ticket,
       };
     case FETCH_PRIORITIES:
-      const priorities: ITicketPriorities[] = action.payload.priorities;
+      const priorities: ITicketPriorities[] = action.payload;
       return {
         ...state,
         priorities: priorities,
       };
     case FETCH_STATES:
-      const states: ITicketStates[] = action.payload.states;
+      const states: ITicketStates[] = action.payload;
       return {
         ...state,
         states,
@@ -84,6 +64,8 @@ const reducer = (state = initialState, action: TicketsActionsType): IState => {
     case API_ERROR:
       return {
         ...state,
+        error:true,
+        message:action.payload
       };
     default:
       return state;

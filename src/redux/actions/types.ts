@@ -12,6 +12,7 @@ import {
 
 //TICKETS
 export const FETCH_TICKETS: string = "FETCH_TICKETS";
+export const UPDATE_TICKET: string = "UPDATE_TIKET";
 export const SET_SELECTED_TICKET: string = "SET_SELECTED_TICKET";
 export const FETCH_PRIORITIES: string = "FETCH_PRIORITIES";
 export const FETCH_STATES: string = "FETCH_STATES";
@@ -19,6 +20,11 @@ export const FETCH_STATES: string = "FETCH_STATES";
 interface IFetchTickets {
   type: typeof FETCH_TICKETS;
   payload: ITicket[];
+}
+
+interface IUpdateTicket {
+  type: typeof UPDATE_TICKET;
+  payload: ITicket;
 }
 
 interface ISetSelectedTicket {
@@ -56,7 +62,12 @@ interface IAuthUser {
   payload: IAuth;
 }
 
-export type AuthActionsTypes = IAuthUser | IAPIStart | IAPIEnd | IAPIError;
+interface IAUTHError {
+  type: typeof AUTH_ERROR;
+  payload: string;
+}
+
+export type AuthActionsTypes = IAuthUser | IAPIStart | IAPIEnd | IAUTHError;
 
 export type AuthDispatch = ThunkDispatch<IAuth, any, AnyAction>;
 
@@ -65,6 +76,7 @@ export type AuthDispatch = ThunkDispatch<IAuth, any, AnyAction>;
 export const API_START: string = "API_START";
 export const API_END: string = "API_END";
 export const API_ERROR: string = "API_ERROR";
+export const AUTH_ERROR: string = "AUTH_ERROR";
 
 interface IAPIStart {
   type: typeof API_START;

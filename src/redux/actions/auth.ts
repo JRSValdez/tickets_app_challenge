@@ -1,13 +1,13 @@
 import API, { setClientToken } from "../../API";
-import { AUTH_USER, AuthDispatch, API_ERROR } from "./types";
-import { IAuth, IUserCredentials } from "../../utils/interfaces";
+import { AUTH_USER, AuthDispatch, AUTH_ERROR, LOG_OUT_USER } from "./types";
+import { IUserCredentials } from "../../utils/interfaces";
 
 
 export const authUser = (credentials: IUserCredentials) => {
   return async (dispatch: AuthDispatch) => {
     const response = await API.post("/login", credentials).then(
       (res) => res.data
-    );
+    ).catch(error => error);
 
     if(response.success){
       setClientToken(response.accessToken);
@@ -19,8 +19,18 @@ export const authUser = (credentials: IUserCredentials) => {
     }
 
     return dispatch({
-      type: API_ERROR,
+      type: AUTH_ERROR,
       payload: response.message,
+    });
+    
+  };
+};
+
+export const logOuthUser = () => {
+  return async (dispatch: AuthDispatch) => {
+    return dispatch({
+      type: LOG_OUT_USER,
+      payload: null,
     });
     
   };

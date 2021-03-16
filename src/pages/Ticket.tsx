@@ -1,9 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchPriorities, fetchStates } from "../redux/actions/actions";
-import { TicketsDispatch } from "../redux/actions/types";
-import { IState, ITicket } from "../utils/interfaces";
+import {
+  fetchPriorities,
+  fetchStates,
+  addTicket,
+  updateTicket,
+  setSelectedTicket,
+} from "../redux/actions/actions";
+import { API_END, API_START, TicketsDispatch } from "../redux/actions/types";
+import { IState } from "../utils/interfaces";
 import { RootState } from "../redux/reducers/index";
 
 import ReactLoading from "react-loading";
@@ -15,8 +21,11 @@ import {
   TitleText,
   RoundedTextArea,
   RoundedButton,
+  CenterContainer,
+  ErrorAlert,
 } from "../components/common";
 import { TicketAttachments } from "../components/Tickets";
+import { TicketScreenInitialState } from "../utils/initialStates";
 
 type acntionType = "add" | "edit" | "view";
 
@@ -25,30 +34,9 @@ interface IParams {
   action: acntionType;
 }
 
-const initialState: ITicket = {
-  id: 0,
-  name: "",
-  description: "",
-  user: {
-    id:0,
-    name:'',
-    email:''
-  },
-  priority: {
-    id:0,
-    name:''
-  },
-  state: {
-    id:0,
-    name:''
-  },
-  attachments: [
-  ],
-  comments:[]
-};
-
 const Ticket = () => {
-  const ticketState = useSelector((state: RootState): IState => state.tickets);
+  const globalState = useSelector((state: RootState): RootState => state);
+  const [ticket, setTicket] = useState(TicketScreenInitialState.ticket);
   const { id, action }: IParams = useParams();
   const dispatch: TicketsDispatch = useDispatch();
 
@@ -56,38 +44,69 @@ const Ticket = () => {
   let view: boolean = action === "view";
   let add: boolean = action === "add";
 
-  const getSelects = useCallback(() => {
-    setIsLoading(true);
+  const getData = useCallback(() => {
+    dispatch({ type: API_START, payload: null });
     dispatch(fetchPriorities()).then(() =>
       dispatch(fetchStates()).then(() => {
+        dispatch({ type: API_END, payload: null });
         if (editable || view) {
-          setTicket(ticketState.selectedTicket);
+          dispatch(setSelectedTicket(parseInt(id))).then(({ payload }) => {
+            setTicket(payload);
+          });
+        } else {
+          setTicket(TicketScreenInitialState.ticket);
         }
-        setIsLoading(false);
       })
     );
   }, [dispatch, editable, view]);
 
-  const [ticket, setTicket] = useState(initialState);
-  const [isLoading, setIsLoading] = useState(false);
-
   useEffect(() => {
-    getSelects();
-  }, [getSelects]);
+    getData();
+  }, [getData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    let target = e.target;
-    setTicket({
-      ...ticket,
-      [target.name]: target.value,
-    });
+    let { name, value } = e.target;
+
+    if (name === "state") {
+      setTicket({
+        ...ticket,
+        state: {
+          ...ticket.state,
+          id: parseInt(value),
+        },
+      });
+    } else if (name === "priority") {
+      setTicket({
+        ...ticket,
+        priority: {
+          ...ticket.priority,
+          id: parseInt(value),
+        },
+      });
+    } else {
+      setTicket({
+        ...ticket,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (add) {
+      dispatch(
+        addTicket({ ...ticket, user_id: globalState.auth.user.id })
+      ).then(() => {});
+    } else {
+      dispatch(updateTicket({ ...ticket, user_id: globalState.auth.user.id })).then(() => {});
+    }
   };
 
   return (
     <MainContainer>
-      <TitleText title={`Ticket #${id}`} />
-      {!isLoading ? (
-        <Form>
+      <TitleText title={add ? "Nuevo Ticket" : `Ticket #${id}`} />
+      {!globalState.tickets.isLoading ? (
+        <Form onSubmit={handleSubmit}>
           <Row>
             <Col sm={12} md={8}>
               <Form.Group controlId="forTicket">
@@ -105,9 +124,9 @@ const Ticket = () => {
               <Form.Group controlId="forStatus">
                 <RoundedDropDown
                   title="Estado"
-                  name="status"
+                  name="state"
                   value={ticket.state.id}
-                  options={ticketState.states}
+                  options={globalState.tickets.states}
                   onChange={handleChange}
                   disabled={view}
                 />
@@ -133,7 +152,7 @@ const Ticket = () => {
                   title="Prioridad"
                   name="priority"
                   value={ticket.priority.id}
-                  options={ticketState.priorities}
+                  options={globalState.tickets.priorities}
                   onChange={handleChange}
                   disabled={view}
                 />
@@ -142,8 +161,8 @@ const Ticket = () => {
                 controlId="forPriority"
                 className="d-flex mt-4 justify-content-center"
               >
-                {editable ? (
-                  <RoundedButton color="primary">
+                {editable || add ? (
+                  <RoundedButton color="primary" type="submit">
                     {editable ? "Editar" : "Guardar"}
                   </RoundedButton>
                 ) : null}
@@ -151,15 +170,24 @@ const Ticket = () => {
             </Col>
           </Row>
           {!editable ? (
-            <TicketAttachments files={ticketState.selectedTicket.attachments} />
+            <TicketAttachments
+              files={globalState.tickets.selectedTicket.attachments}
+            />
           ) : null}
         </Form>
       ) : (
-        <div className="d-flex flex-column justify-content-center align-items-center">
-          Cargando
-          <ReactLoading type="cubes" color="#000" />
-        </div>
+        <CenterContainer>
+          <div>
+            Cargando
+            <ReactLoading type="cubes" color="#000" />
+          </div>
+        </CenterContainer>
       )}
+      {globalState.tickets.error ? (
+        <CenterContainer>
+          <ErrorAlert message={globalState.tickets.message} />
+        </CenterContainer>
+      ) : null}
     </MainContainer>
   );
 };
