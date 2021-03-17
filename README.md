@@ -4,6 +4,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Steps
 
+### `git clone https://github.com/JRSValdez/tickets_app_challenge`
+
+### `cd tickets_app_challenge`
+
 ### `npm install`
 
 To install all dependencies of the project
