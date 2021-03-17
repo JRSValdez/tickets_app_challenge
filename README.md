@@ -14,3 +14,15 @@ Edit the baseURL object prop with the custom API end point
 ### `npm start`
 
 To run the project, please make sure that the API is running before running the command.
+
+## Frameworks / Technologies
+
+* React Js
+* Typescript
+* redux-thunk
+* Axios
+* react-bootstrap
+* styles-components
+* react-router-dom
+* react-loading
+* react-icons
